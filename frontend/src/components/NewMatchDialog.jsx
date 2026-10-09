@@ -26,7 +26,7 @@ export const NewMatchDialog = ({ rosters }) => {
           <Plus size={18} /> Nuova partita
         </button>
       </DialogTrigger>
-      <DialogContent className="bg-slate-900 border-white/10 max-w-lg">
+      <DialogContent aria-describedby={undefined} className="bg-slate-900 border-white/10 max-w-lg">
         <DialogHeader><DialogTitle className="font-display text-3xl uppercase">Nuova partita</DialogTitle></DialogHeader>
         <div className="grid grid-cols-2 gap-3">
           <Lbl t="La mia squadra"><input data-testid="new-my-team" className={inp} value={f.my_team} onChange={set("my_team")} placeholder="Es. Olimpia" /></Lbl>

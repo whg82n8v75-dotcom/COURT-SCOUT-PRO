@@ -20,7 +20,7 @@ export const SaveRosterDialog = ({ match }) => {
           <Users size={15} /> <span className="hidden sm:inline">Salva roster</span>
         </button>
       </DialogTrigger>
-      <DialogContent className="bg-slate-900 border-white/10">
+      <DialogContent aria-describedby={undefined} className="bg-slate-900 border-white/10">
         <DialogHeader><DialogTitle className="font-display text-2xl uppercase">Salva roster</DialogTitle></DialogHeader>
         <input data-testid="roster-name-input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nome roster"
           className="h-11 px-3 rounded-md bg-slate-800 border border-white/10 outline-none focus:border-blue-500" />
