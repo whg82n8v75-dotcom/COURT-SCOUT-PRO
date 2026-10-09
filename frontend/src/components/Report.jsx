@@ -4,7 +4,7 @@ import { PointsChart, QuarterChart, TeamShotMap } from "@/components/Charts";
 import { AiAnalysis } from "@/components/AiAnalysis";
 import { ourScore, oppScore } from "@/lib/stats";
 
-export const Report = ({ match, setMatch, pmMap }) => (
+export const Report = ({ match, mutate, pmMap }) => (
   <div className="print-light flex flex-col gap-6 fade-up">
     <div className="flex flex-wrap items-end justify-between gap-3 border-b border-white/10 pb-4">
       <div>
@@ -33,7 +33,7 @@ export const Report = ({ match, setMatch, pmMap }) => (
     </section>
     <section>
       <h3 className="text-xl font-bold uppercase mb-3">3. Analisi tattica</h3>
-      <AiAnalysis match={match} setMatch={setMatch} />
+      <AiAnalysis match={match} mutate={mutate} />
     </section>
   </div>
 );

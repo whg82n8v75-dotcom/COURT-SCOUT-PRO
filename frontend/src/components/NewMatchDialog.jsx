@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { api } from "@/lib/api";
+import { createMatch } from "@/lib/db";
 import { buildPlayers } from "@/lib/stats";
 
 const inp = "h-11 px-3 rounded-md bg-slate-800 border border-white/10 outline-none focus:border-blue-500 text-sm [color-scheme:dark] w-full";
@@ -16,8 +16,8 @@ export const NewMatchDialog = ({ rosters }) => {
     const roster = rosters.find((r) => r.id === f.roster);
     const { roster: _r, ...rest } = f;
     const body = { ...rest, my_team: f.my_team || "Squadra Casa", opponent_team: f.opponent_team || "Avversari", players: buildPlayers(roster?.players), opponent_events: [] };
-    const { data } = await api.post("/matches", body);
-    nav(`/match/${data.id}`);
+    const m = await createMatch(body);
+    nav(`/match/${m.id}`);
   };
   return (
     <Dialog>

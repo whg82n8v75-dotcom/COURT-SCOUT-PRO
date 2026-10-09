@@ -2,14 +2,14 @@ import { useState } from "react";
 import { Users } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { api } from "@/lib/api";
+import { createRoster } from "@/lib/db";
 
 export const SaveRosterDialog = ({ match }) => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const save = async () => {
     const players = match.players.map(({ number, name, surname }) => ({ number, name, surname }));
-    await api.post("/rosters", { name: name || match.my_team, players });
+    await createRoster({ name: name || match.my_team, players });
     toast.success("Roster salvato");
     setOpen(false);
   };

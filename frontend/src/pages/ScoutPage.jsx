@@ -31,7 +31,7 @@ function latestEvent(m) {
 
 export default function ScoutPage() {
   const { id } = useParams();
-  const { match, mutate, setMatch, saving } = useMatch(id);
+  const { match, mutate, saving } = useMatch(id);
   const [activeId, setActiveId] = useState(1);
   const [result, setResult] = useState("made");
   const pmMap = useMemo(() => (match ? plusMinusMap(match) : {}), [match]);
@@ -108,7 +108,7 @@ export default function ScoutPage() {
         </TabsContent>
 
         <TabsContent value="report" className="mt-0">
-          <Report match={match} setMatch={setMatch} pmMap={pmMap} />
+          <Report match={match} mutate={mutate} pmMap={pmMap} />
         </TabsContent>
 
         <TabsContent value="info" className="mt-0">

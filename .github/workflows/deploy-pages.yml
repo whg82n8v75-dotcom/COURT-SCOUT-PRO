@@ -1,0 +1,59 @@
+name: Deploy PWA su GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Rimuovi strumenti di sviluppo Emergent (non servono alla build)
+        run: |
+          node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('package.json'));for(const k of Object.keys(p.devDependencies||{}))if(k.startsWith('@emergentbase/'))delete p.devDependencies[k];delete p.packageManager;fs.writeFileSync('package.json',JSON.stringify(p,null,2));"
+      - name: Installa dipendenze
+        run: yarn install --network-timeout 600000
+      - name: Build
+        run: yarn build
+        env:
+          CI: false
+          GENERATE_SOURCEMAP: false
+          DISABLE_EMERGENT_OVERLAY: "true"
+      - name: Verifica file PWA
+        run: |
+          test -f build/index.html
+          test -f build/sw.js
+          test -f build/manifest.json
+          test -f build/asset-manifest.json
+          touch build/.nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

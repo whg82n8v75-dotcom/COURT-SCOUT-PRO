@@ -1,5 +1,5 @@
 import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import MatchesPage from "@/pages/MatchesPage";
 import ScoutPage from "@/pages/ScoutPage";
@@ -7,12 +7,12 @@ import ScoutPage from "@/pages/ScoutPage";
 function App() {
   return (
     <div className="App min-h-screen">
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route path="/" element={<MatchesPage />} />
           <Route path="/match/:id" element={<ScoutPage />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
       <Toaster position="top-center" richColors />
     </div>
   );

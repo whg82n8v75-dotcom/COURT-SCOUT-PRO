@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Home, Plane, Trash2, Users } from "lucide-react";
 import { toast } from "sonner";
-import { api } from "@/lib/api";
+import { deleteMatch, deleteRoster, listMatches, listRosters } from "@/lib/db";
 import { NewMatchDialog } from "@/components/NewMatchDialog";
 import { ConfirmButton } from "@/components/ConfirmButton";
-
-const HERO = "https://images.unsplash.com/photo-1563506644863-444710df1e03?crop=entropy&cs=srgb&fm=jpg&q=85&w=1800";
+import { BackupBar } from "@/components/BackupBar";
+import HERO from "@/assets/hero.jpg";
 
 const MatchRow = ({ m, i, onDelete }) => {
   const atHome = m.venue === "casa";
@@ -33,11 +33,11 @@ export default function MatchesPage() {
   const [matches, setMatches] = useState([]);
   const [rosters, setRosters] = useState([]);
   const load = () => {
-    api.get("/matches").then((r) => setMatches(r.data));
-    api.get("/rosters").then((r) => setRosters(r.data));
+    listMatches().then(setMatches);
+    listRosters().then(setRosters);
   };
   useEffect(load, []);
-  const del = async (path, msg) => { await api.delete(path); toast.success(msg); load(); };
+  const del = async (fn, msg) => { await fn(); toast.success(msg); load(); };
 
   return (
     <div>
@@ -47,8 +47,12 @@ export default function MatchesPage() {
         <div className="relative max-w-6xl mx-auto px-5 py-14 sm:py-20">
           <p className="text-xs uppercase tracking-[0.3em] text-sky-400 font-semibold mb-3">Scouting a bordo campo</p>
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold uppercase leading-[0.9]">Basket Scout<br />Sheet Pro</h1>
-          <p className="text-slate-300 mt-4 max-w-md text-sm sm:text-base">Mappa tiri, +/- automatico, boxscore e analisi AI. Ogni partita viene salvata e la puoi riaprire quando vuoi.</p>
-          <div className="mt-8"><NewMatchDialog rosters={rosters} /></div>
+          <p className="text-slate-300 mt-4 max-w-md text-sm sm:text-base">Mappa tiri, +/- automatico, boxscore e analisi tattica. Funziona offline: ogni partita resta salvata su questo dispositivo.</p>
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            <NewMatchDialog rosters={rosters} />
+            <BackupBar onImported={load} />
+          </div>
+          <p className="text-xs text-slate-500 mt-4">I dati sono salvati solo su questo dispositivo: esporta un backup regolarmente.</p>
         </div>
       </div>
 
@@ -59,7 +63,7 @@ export default function MatchesPage() {
             <p data-testid="no-matches" className="text-slate-500 border border-dashed border-white/10 rounded-xl p-10 text-center">Nessuna partita salvata. Crea la prima!</p>
           ) : (
             <div className="flex flex-col gap-3">
-              {matches.map((m, i) => <MatchRow key={m.id} m={m} i={i} onDelete={() => del(`/matches/${m.id}`, "Partita eliminata")} />)}
+              {matches.map((m, i) => <MatchRow key={m.id} m={m} i={i} onDelete={() => del(() => deleteMatch(m.id), "Partita eliminata")} />)}
             </div>
           )}
         </section>
@@ -70,7 +74,7 @@ export default function MatchesPage() {
           ) : rosters.map((r, i) => (
             <div key={r.id} data-testid={`roster-row-${i}`} className="flex items-center justify-between bg-slate-900/60 border border-white/10 rounded-lg px-4 py-3 mb-2">
               <div><div className="font-semibold">{r.name}</div><div className="text-xs text-slate-500">{r.players.length} giocatori</div></div>
-              <button data-testid={`delete-roster-${i}`} onClick={() => del(`/rosters/${r.id}`, "Roster eliminato")} className="tap text-slate-500 hover:text-red-400"><Trash2 size={16} /></button>
+              <button data-testid={`delete-roster-${i}`} onClick={() => del(() => deleteRoster(r.id), "Roster eliminato")} className="tap text-slate-500 hover:text-red-400"><Trash2 size={16} /></button>
             </div>
           ))}
         </section>
