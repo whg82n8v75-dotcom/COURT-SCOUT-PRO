@@ -1,10 +1,10 @@
-import { fmtPm, pmClass, playerLine, teamTotals } from "@/lib/stats";
+import { fmtPm, ftText, pmClass, playerLine, teamTotals } from "@/lib/stats";
 
 const HEAD = ["#", "Giocatore", "PTS", "2PT", "3PT", "FG", "FG%", "TL", "RO", "RD", "RT", "AST", "STL", "TO", "BLK", "PF", "DF", "+/-"];
 
 const cells = (l) => [
   <b key="p">{l.pts}</b>, `${l.m2}/${l.a2}`, `${l.m3}/${l.a3}`, `${l.fgM}/${l.fgA}`,
-  l.fgA ? `${Math.round((l.fgM / l.fgA) * 100)}%` : "-", `${l.ftM}/${l.ftA}`,
+  l.fgA ? `${Math.round((l.fgM / l.fgA) * 100)}%` : "-", <span key="ft" className="whitespace-nowrap">{ftText(l.ftM, l.ftA)}</span>,
   l.ro, l.rd, l.rt, l.ast, l.stl, l.to, l.blk, l.pf, l.df,
 ];
 

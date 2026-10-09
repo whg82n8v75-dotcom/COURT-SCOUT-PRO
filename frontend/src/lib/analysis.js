@@ -1,4 +1,4 @@
-import { fmtPm, oppScore, ourScore, playerLine, playerName, plusMinusMap, quarterPoints, teamTotals } from "@/lib/stats";
+import { fmtPm, ftText, oppScore, ourScore, playerLine, playerName, plusMinusMap, quarterPoints, teamTotals } from "@/lib/stats";
 
 const pc = (m, a) => (a ? Math.round((m / a) * 100) : null);
 const pcs = (m, a) => (a ? `${pc(m, a)}%` : "n.d.");
@@ -36,7 +36,7 @@ function issues(match, rows, t) {
     recs.push("Selezionare meglio i tiri da fuori e cercare di più l'attacco al ferro o i tiri dopo uno scarico.");
   }
   if (t.ftA >= 6 && pc(t.ftM, t.ftA) < 65) {
-    crit.push(`Tiri liberi sotto il 65%: ${t.ftM}/${t.ftA}.`);
+    crit.push(`Tiri liberi sotto il 65%: ${ftText(t.ftM, t.ftA)}.`);
     recs.push("Inserire serie di tiri liberi a fine allenamento, sotto fatica.");
   }
   if (t.a2 >= 10 && pc(t.m2, t.a2) < 40) crit.push(`Percentuale da 2 bassa: ${t.m2}/${t.a2} (${pcs(t.m2, t.a2)}).`);
@@ -75,7 +75,7 @@ export function buildAnalysis(match) {
   return [
     "## Sintesi",
     `${esito} ${venue}: **${match.my_team} ${us} - ${them} ${match.opponent_team}**.`,
-    `Dal campo ${t.fgM}/${t.fgA} (${pcs(t.fgM, t.fgA)}), da 2 ${t.m2}/${t.a2} (${pcs(t.m2, t.a2)}), da 3 ${t.m3}/${t.a3} (${pcs(t.m3, t.a3)}), liberi ${t.ftM}/${t.ftA} (${pcs(t.ftM, t.ftA)}). ${t.rt} rimbalzi (${t.ro} offensivi), ${t.ast} assist, ${t.stl} recuperi, ${t.to} palle perse.`,
+    `Dal campo ${t.fgM}/${t.fgA} (${pcs(t.fgM, t.fgA)}), da 2 ${t.m2}/${t.a2} (${pcs(t.m2, t.a2)}), da 3 ${t.m3}/${t.a3} (${pcs(t.m3, t.a3)}), liberi ${ftText(t.ftM, t.ftA)}. ${t.rt} rimbalzi (${t.ro} offensivi), ${t.ast} assist, ${t.stl} recuperi, ${t.to} palle perse.`,
     `Provenienza punti: ${share(t.m2 * 2)} da 2, ${share(t.m3 * 3)} da 3, ${share(t.ftM)} dai liberi.`,
     "## Andamento per quarti", ...quarters(match),
     "## Migliori in campo", ...leaders(rows),

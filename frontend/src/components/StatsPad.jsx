@@ -1,5 +1,5 @@
 import { Minus, Plus } from "lucide-react";
-import { COUNTERS, fmtPm, pmClass, playerPoints } from "@/lib/stats";
+import { COUNTERS, fmtPm, pct1, pmClass, playerPoints } from "@/lib/stats";
 
 const Counter = ({ label, value, onChange, k, valueCls = "" }) => (
   <div className="bg-slate-800/60 border border-white/10 rounded-lg p-2 text-center">
@@ -27,11 +27,14 @@ export const StatsPad = ({ player, pm, onStat, onFt }) => {
       <div className="bg-slate-800/60 border border-white/10 rounded-lg p-2">
         <div className="flex justify-between items-center mb-1.5">
           <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Tiri Liberi (TL)</span>
-          <span data-testid="stat-ft" className="font-mono font-bold">{ftM}/{player.fts.length}</span>
+          <span className="font-mono font-bold">
+            <span data-testid="stat-ft">{ftM}/{player.fts.length}</span>
+            <span data-testid="stat-ft-pct" className="text-slate-400 ml-1.5">({pct1(ftM, player.fts.length)})</span>
+          </span>
         </div>
         <div className="flex gap-2">
-          <button data-testid="btn-ft-made" onClick={() => onFt(true)} className="tap flex-1 h-10 rounded-md bg-emerald-600 font-bold text-sm">+ Segnato</button>
-          <button data-testid="btn-ft-missed" onClick={() => onFt(false)} className="tap flex-1 h-10 rounded-md bg-red-600 font-bold text-sm">+ Sbagliato</button>
+          <button data-testid="btn-ft-made" onClick={() => onFt(true)} className="tap flex-1 h-11 rounded-md bg-emerald-600 font-bold text-sm tracking-wide">TL SEGNATO</button>
+          <button data-testid="btn-ft-missed" onClick={() => onFt(false)} className="tap flex-1 h-11 rounded-md bg-red-600 font-bold text-sm tracking-wide">TL SBAGLIATO</button>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-2">

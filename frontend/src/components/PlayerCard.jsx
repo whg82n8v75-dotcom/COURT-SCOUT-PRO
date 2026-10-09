@@ -31,6 +31,7 @@ export const PlayerCard = ({ p, idx, active, pm, onSelect, onToggle, onEdit }) =
     <div className="flex gap-4 mt-2 text-[11px] text-slate-400">
       <span>PTS <b className="text-slate-100 font-mono" data-testid={`player-pts-${idx}`}>{playerPoints(p)}</b></span>
       <span>Tiri <b className="text-slate-100 font-mono">{p.shots.length}</b></span>
+      <span>TL <b className="text-slate-100 font-mono" data-testid={`player-ft-${idx}`}>{p.fts.filter((f) => f.made).length}/{p.fts.length}</b></span>
       <span>PF <b className={`font-mono ${p.stats.pf >= 5 ? "text-red-400" : "text-slate-100"}`}>{p.stats.pf}</b></span>
       {p.stats.pf >= 5 && <span className="text-red-400 font-bold">ESCLUSO</span>}
     </div>

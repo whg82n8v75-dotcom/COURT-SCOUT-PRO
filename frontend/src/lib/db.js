@@ -1,5 +1,5 @@
 import { createStore, del, entries, get, set, setMany } from "idb-keyval";
-import { oppScore, ourScore } from "@/lib/stats";
+import { ftText, oppScore, ourScore, playerName } from "@/lib/stats";
 
 const store = createStore("court-scout-pro", "kv");
 const now = () => new Date().toISOString();
@@ -38,8 +38,16 @@ export async function createRoster(body) {
 
 export const deleteRoster = (id) => del(`r:${id}`, store);
 
+const ftOf = (fts) => [fts.filter((f) => f.made).length, fts.length];
+
+function summarize(m) {
+  const giocatori = m.players.filter((p) => p.fts.length).map((p) => ({ giocatore: playerName(p), tiri_liberi: ftText(...ftOf(p.fts)) }));
+  return { punteggio: `${ourScore(m)}-${oppScore(m)}`, tiri_liberi_squadra: ftText(...ftOf(m.players.flatMap((p) => p.fts))), tiri_liberi_giocatori: giocatori };
+}
+
 export async function exportAll() {
-  return { app: "court-scout-pro", version: 1, exported_at: now(), matches: await byPrefix("m:"), rosters: await byPrefix("r:") };
+  const matches = (await byPrefix("m:")).map((m) => ({ ...m, riepilogo: summarize(m) }));
+  return { app: "court-scout-pro", version: 1, exported_at: now(), matches, rosters: await byPrefix("r:") };
 }
 
 export async function importAll(data) {
@@ -47,7 +55,7 @@ export async function importAll(data) {
     throw new Error("File di backup non valido");
   }
   const okMatch = (m) => m?.id && Array.isArray(m.players) && Array.isArray(m.opponent_events);
-  const matches = data.matches.filter(okMatch);
+  const matches = data.matches.filter(okMatch).map(({ riepilogo, ...m }) => m);
   const rosters = data.rosters.filter((r) => r?.id && Array.isArray(r.players));
   await setMany([...matches.map((m) => [`m:${m.id}`, m]), ...rosters.map((r) => [`r:${r.id}`, r])], store);
   return { matches: matches.length, rosters: rosters.length };
