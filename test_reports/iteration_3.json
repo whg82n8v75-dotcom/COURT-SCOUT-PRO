@@ -1,0 +1,25 @@
+{
+  "summary": "Iteration 3 frontend-only test focused on free-throw feature + regression on preview URL at 1366x900. Verified: StatsPad btn-ft-made (TL SEGNATO) / btn-ft-missed (TL SBAGLIATO); stat-ft '0/0' and stat-ft-pct '(-)' at zero attempts; 2 made + 1 missed -> stat-ft '2/3' and stat-ft-pct '(66,7%)'; 5/6 -> '(83,3%)'; made FT increments scoreboard-my-score and stat-pts by 1; missed FT changes neither; +/- +1 applied only to in-court players (P0..P4) and NOT to bench P5 (verified +2 on P0/P4, 0 on P5 after 2 makes); undo-btn correctly reverts last FT (made: -1 score, -1 pm; missed: no score/pm change) in sequence; player-ft-N shows '2/3' correctly; Boxscore row TL column shows 'm/a (x,y%)' including team total '2/2 (100,0%)' and '0/0 (-)' for players with 0 attempts; AI analysis line 'liberi 2/2 (100,0%)' matches team totals; FT data persisted across full page reload (IndexedDB court-scout-pro/kv); Export backup JSON contains 'fts' arrays on each player and 'riepilogo' object with tiri_liberi_squadra='2/2 (100,0%)' and per-player tiri_liberi_giocatori; Import of same JSON succeeded with toast 'Importate 1 partite e 0 roster' (riepilogo stripped on import by db.importAll). Regression: opp-points-3 increments opponent score, undo-btn reverts it, court-shot-svg top-center click adds 3pt made (score 1->4). No console errors or warnings.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/test_reports/iteration_3.json"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "stats.js plusMinusMap: made FTs correctly use f.onCourt snapshot (not current inCourt), which is the right design and verified by the bench-exclusion test.",
+    "db.js summarize is only used on export (riepilogo is stripped by importAll) - clean separation, good.",
+    "ftText uses pct1 which emits Italian locale comma and one decimal; zero attempts yield '-' guarded in pct1. Boxscore cells correctly inline ftText for both player rows and team total.",
+    "ScoutPage.onFt and onUndo correctly delegate to latestEvent timestamp-based ordering; the mixed FT/opp/shot undo sequence was verified."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A", "frontend": "100% of requested FT flows + regression"},
+  "test_credentials": "N/A (no auth, fully client-side app)",
+  "seed_data_creation": "Reused the single existing match from iteration 2 persisted in IndexedDB; reset-stats before FT tests. Final state after test: one match with mixed FTs on player #1 and some opponent/shot events (then undone). No extra matches created.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Correct testids: new-my-team, new-opp-team, create-match-btn (not new-match-my-team). ConfirmButton descendants use '<testid>-confirm' / '<testid>-cancel' (e.g. reset-stats-btn-confirm). Scoreboard testids: scoreboard-my-score, scoreboard-opp-score. AI output testid: ai-analysis-text. Boxscore TL column index is 7 in player rows and 6 in boxscore-total row (first td is colspan=2). ftText format in app is 'm/a (x,y%)' with a space before '(' - verified. plusMinusMap uses f.onCourt snapshot so bench players at the moment of the FT are correctly excluded.",
+  "rca of the issue": "No bugs found."
+}
