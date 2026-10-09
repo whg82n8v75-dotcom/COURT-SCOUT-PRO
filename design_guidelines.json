@@ -1,0 +1,108 @@
+{
+  "theme": {
+    "default_mode": "dark",
+    "rationale": "Courtside tactical bench scouting app: high ambient light in arenas requires sharp dark command-center aesthetic (#0B1120 / #0F172A) with intense luminous accents for rapid touch registration without eye strain."
+  },
+  "typography": {
+    "font_family_heading": "Cabinet Grotesk, Barlow, Outfit, system-ui, sans-serif",
+    "font_family_body": "IBM Plex Sans, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif",
+    "font_family_mono": "IBM Plex Mono, JetBrains Mono, monospace",
+    "scale": {
+      "scoreboard_score": "text-5xl sm:text-6xl font-black tracking-tight font-mono",
+      "h1": "text-2xl sm:text-3xl font-extrabold tracking-tight",
+      "h2": "text-xl sm:text-2xl font-bold tracking-tight",
+      "h3": "text-lg sm:text-xl font-semibold",
+      "stat_number": "text-2xl sm:text-3xl font-black font-mono tracking-tighter",
+      "body": "text-sm sm:text-base leading-normal",
+      "court_badge": "text-xs font-bold tracking-wider uppercase",
+      "tab_label": "text-xs sm:text-sm font-semibold tracking-wide uppercase"
+    }
+  },
+  "colors": {
+    "background_base": "#0B1120",
+    "surface_card": "#0F172A",
+    "surface_elevated": "#1E293B",
+    "surface_highlight": "#334155",
+    "border_subtle": "rgba(255, 255, 255, 0.08)",
+    "border_active": "rgba(59, 130, 246, 0.5)",
+    "primary": "#2563EB",
+    "primary_hover": "#1D4ED8",
+    "success_made": "#10B981",
+    "danger_miss": "#EF4444",
+    "text_main": "#F8FAFC",
+    "text_muted": "#94A3B8",
+    "court_parquet_fill": "#B45309",
+    "court_paint_area": "#92400E",
+    "court_lines": "#FEF3C7",
+    "quarter_colors": {
+      "Q1": "#2563EB",
+      "Q2": "#10B981",
+      "Q3": "#F59E0B",
+      "Q4": "#8B5CF6",
+      "OT": "#EC4899"
+    },
+    "stat_accents": {
+      "pts": "#38BDF8",
+      "plus_minus_pos": "#10B981",
+      "plus_minus_neg": "#EF4444",
+      "fouls_warning": "#F59E0B",
+      "fouls_out": "#EF4444"
+    }
+  },
+  "layout_and_grids": {
+    "concept": "Bench-Ready Command Center (Landscape Tablet & Desktop optimized)",
+    "tablet_layout_structure": {
+      "header": "Sticky top bar: Home vs Away names (editable inline), Scoreboard (Home PTS vs Opponent PTS), Period selector (Q1, Q2, Q3, Q4, OT), Home/Away toggle badge, Opponent quick score buttons (+1, +2, +3) with instant visual ripple, and Save/Report nav buttons.",
+      "main_grid": "3-column tactical dashboard on md/lg: Left (Roster 20 players, filter All/5 In Campo, quick switch, foul badges), Center (Clickable SVG Basketball Half-Court with Made/Missed toggle + 2PT/3PT auto-detector depending on click distance, shot marker log, undo shot button), Right (Tactical stats pad for active player: PTS, +/-, PF, RO, RD, TO, STL, AST, BLK, FT made/miss, DF received foul, plus quick quick substitution button)."
+    },
+    "mobile_portrait_adaptation": "Tabbed dock on mobile/portrait tablet: [Tab 1: Campo/Tiro, Tab 2: Roster 5/20, Tab 3: Statistiche & Boxscore, Tab 4: Report AI & PDF]."
+  },
+  "svg_half_court_spec": {
+    "dimensions": "viewBox 0 0 500 470",
+    "parquet_base": "#B45309 with subtle horizontal wood grain lines (#92400E)",
+    "key_three_point_distance": "Arc radius approximately 320 units centered on hoop (250, 420). If click distance > 320 => tagged 3PT (3 pts if made), else 2PT (2 pts if made). Free throw clicks in key are counted or logged.",
+    "shot_markers": {
+      "made": "Solid circle with checkmark/center ring, colored by current Quarter color",
+      "missed": "Cross 'X' marker in danger red or dimmed quarter hue with strokeWidth 3",
+      "animation": "Subtle scale pop on placement (scale 0.5 to 1.0, duration 0.2s)"
+    }
+  },
+  "boxscore_and_report_spec": {
+    "team_boxscore_table": "Dense responsive table: # (Number), Giocatore (Cognome N.), Status (5 in campo badge), MIN/Quarti, PTS, T2 (Segnati/Tentati, %), T3, TL, TIRI TOT, RO, RD, RT, AST, TO, STL, BLK, PF, DF, +/-.",
+    "charts": "Recharts Points per Quarter bar chart, Shot distribution (2PT vs 3PT vs FT pie or donut), Shot efficiency map with quarter filter.",
+    "ai_analysis_section": "Modern card with AI Coach Insights: Quarter-by-quarter momentum breakdown, Defensive impact rating (+/-), Top performer spotlight, Bench vs Starters scoring delta, and Tactical recommendations (e.g. Turnovers in Q3, 3PT shot selection)."
+  },
+  "component_guidelines": {
+    "scoreboard_widget": "Large high-contrast display with Home Team (custom name) vs Away Team (custom name), Casa/Trasferta indicator, Live Total, Opponent points adder with prompt toast feedback.",
+    "player_card_roster": "Compact card with # badge, Cognome & Nome, 5 IN CAMPO indicator with toggle switch, current fouls (visual dots 1-5, red alert on 5 fouls), PTS and +/- badge.",
+    "court_controller": "Segnato/Sbagliato toggle (Green 'Segnato' button / Red 'Sbagliato' button with high tactile contrast), Quarto selector tabs (Q1-OT with dedicated badge color), Annulla Ultimo Tiro (Undo) with count badge.",
+    "stat_counter_button": "Big touch target (>48px) with quick tap +1 and long-press or '-' to decrement, haptic vibration fallback if supported, tactile border."
+  },
+  "instructions_to_main_agent": [
+    "Build the complete application with React and FastAPI backend.",
+    "Preserve the authentic Italian basketball scout sheet nomenclature (IN CAMPO, PANCHINA, Segnato, Sbagliato, Falli PF, Rimbalzi RO/RD, Perse TO, Recuperi STL, Assist AST, Stoppate BLK, Tiri Liberi TL, Falli Subiti DF, Valutazione, +/-).",
+    "Keep the match data persistent in backend database (MongoDB/FastAPI) so users can create, edit names/venue/date, save live actions, reopen past matches, and export clean print PDF.",
+    "Implement the AI Match Analysis report using LLM integration on backend (or smart analytics engine fallback when offline) to produce genuine tactical coaching notes.",
+    "Enable full in-place editing of Home and Away team names, match date, location, and Casa/Fuori Casa (Home/Away game toggle).",
+    "Ensure every clickable button, input, toggle, and critical table cell has unique `data-testid` attributes (e.g. data-testid='scoreboard-home-score', data-testid='player-item-0', data-testid='court-shot-svg', data-testid='btn-add-stat-ast', data-testid='toggle-in-campo-0', data-testid='export-pdf-btn').",
+    "Support sound / tactile feedback toggle and high-contrast courtside mode for outdoor or brightly lit sports arenas."
+  ],
+  "image_urls": [
+    {
+      "category": "hero_background",
+      "description": "Atmospheric illuminated indoor basketball court hardwood floor with arena lighting for dashboard headers and empty states",
+      "image_url": "https://images.unsplash.com/photo-1563506644863-444710df1e03?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzZ8MHwxfHNlYXJjaHwxfHxiYXNrZXRiYWxsJTIwY291cnQlMjBoYXJkd29vZCUyMGZsb29yfGVufDB8fHx8MTc5MTU2NjEwMXww&ixlib=rb-4.1.0&q=85"
+    },
+    {
+      "category": "gym_overview",
+      "description": "Wide shot of basketball pavilion hardwood court with grandstands for match report cover",
+      "image_url": "https://images.unsplash.com/photo-1572454181157-0b40dd7667fe?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzZ8MHwxfHNlYXJjaHwyfHxiYXNrZXRiYWxsJTIwY291cnQlMjBoYXJkd29vZCUyMGZsb29yfGVufDB8fHx8MTc5MTU2NjEwMXww&ixlib=rb-4.1.0&q=85"
+    }
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": {
+    "avoid_ai_slop": "Use sharp courtside tactile aesthetics: dark slate matte surfaces (#0B1120, #0F172A), amber parquet half-court (#B45309), high-contrast electric accents. Do NOT use soft pastel generic gradients.",
+    "tactile_controls": "Buttons used during play (shot markers, stats +1, undo, opponent score) must have generous touch targets (min 44px-52px height) for fast fingers on a tablet without mis-clicks.",
+    "accessibility": "Ensure all text on dark slate and on parquet court exceeds APCA/WCAG contrast ratios with crisp text-shadow or solid contrasting badges.",
+    "testing_readiness": "All interactive triggers and metric badges must include distinct data-testid tags."
+  }
+}
