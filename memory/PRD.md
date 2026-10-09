@@ -1,30 +1,20 @@
-# Basket Scout Sheet Pro — PRD
+# Court Scout Pro — PRD
 
 ## Problema originale
-L'utente ha incollato un'app HTML monofile "Basket Scout Sheet Pro" (scouting basket in italiano). Va ricostruita in React + FastAPI + MongoDB, restando fedele all'originale e correggendone i bug, con restyling per tablet, storico partite/roster, report AI, nomi squadra casa/ospiti modificabili e supporto alle partite fuori casa.
+App HTML "Basket Scout Sheet Pro" ricostruita in React. Poi l'utente ha chiesto di renderla autonoma e gratuita: una PWA su GitHub Pages da usare solo su iPad, offline, con dati locali in IndexedDB, analisi automatica locale e backup JSON. Backend e MongoDB vanno rimossi.
 
-## Architettura
-- Backend FastAPI (`/app/backend/server.py`): CRUD matches, CRUD rosters, `POST /api/matches/{id}/analysis` in streaming SSE (Claude claude-sonnet-5-5 tramite Emergent LLM key), BaseDocument/PyObjectId
-- Frontend React: `/` (storico + roster + nuova partita), `/match/:id` (tab Scouting Live / Report / Dati partita). Salvataggio automatico con debounce 600ms
-- Statistiche derivate dagli eventi (`lib/stats.js`): ogni tiro, tiro libero e canestro avversario salva i giocatori in campo in quel momento
+## Architettura (attuale)
+- Solo frontend React (CRA/craco), `homepage: "."` e HashRouter, così funziona in qualsiasi sottocartella di GitHub Pages
+- `lib/db.js`: IndexedDB tramite idb-keyval (DB `court-scout-pro`, store `kv`, chiavi `m:<id>` e `r:<id>`), esportazione/importazione e `navigator.storage.persist`
+- `lib/analysis.js`: analisi tattica in italiano generata da regole sulle statistiche
+- `public/sw.js`: service worker che salva in cache tutti i file elencati in asset-manifest; rete con fallback alla cache (timeout 4s) per la pagina principale, cache prima della rete per gli altri file; si aggiorna da solo quando l'app è online
+- `public/manifest.json` + icone + meta Apple; font (@fontsource) e immagine principale inclusi nella build
+- `.github/workflows/deploy-pages.yml`: a ogni push su main rimuove i pacchetti di sviluppo Emergent, compila e pubblica su Pages
 
-## Implementato (2026-06)
-- Tabellone con nomi squadra modificabili e interruttore In casa / Fuori casa che scambia i lati
-- Roster di 20 giocatori con stato in campo/panchina, badge 5/5, pallini falli, segnale di esclusione a 5 falli
-- Campo cliccabile (segnato/sbagliato, colori per quarto), riconoscimento del tiro da 3 allineato alla linea disegnata
-- Tiri liberi segnati e sbagliati, contatori delle statistiche, correzione manuale del +/-
-- Punti avversari da +1/+2/+3, annullamento globale dell'ultima azione
-- Report: boxscore con totali e FG%, mappa tiri filtrabile per quarto, grafico punti per giocatore, parziali per quarto (noi e avversari), analisi AI, esportazione PDF tramite stampa
-- Roster salvabili e riutilizzabili nelle nuove partite; azzeramento della partita
+## Implementato
+- 2026-06: MVP full-stack (tabellone, roster, campo, statistiche, +/-, report, analisi AI)
+- 2026-06: conversione in PWA offline; backend/MongoDB/LLM rimossi; backup JSON (Web Share su iPad o download); analisi locale; verificati una build come in CI e il funzionamento offline con service worker attivo
 
-## Bug corretti rispetto all'originale
-- Il +/- ora è calcolato sui giocatori in campo al momento dell'azione (annullare dopo un cambio non lo altera più)
-- Il riconoscimento del tiro da 3 ora corrisponde all'arco disegnato
-- Il "-" sui tiri liberi non altera più il +/- e i tiri liberi sbagliati vengono registrati
-- I punti per quarto includono i tiri liberi
-- Nomi squadra separati (prima venivano ricavati spezzando il testo su "vs")
-
-## Backlog
-- P1: minuti giocati / tempo dei cambi, valutazione (VAL)
-- P1: statistiche cumulative stagionali per giocatore
-- P2: guardia contro la sovrascrittura con più schede aperte, scorciatoie da tastiera
+## Da fare / note
+- Pubblicazione su GitHub Pages da verificare da parte dell'utente (push + Settings → Pages → Source: GitHub Actions)
+- P2: scelta tra "sostituisci" e "unisci" all'importazione; minuti giocati; statistiche stagionali

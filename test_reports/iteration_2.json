@@ -1,0 +1,27 @@
+{
+  "summary": "Iteration 2 frontend-only PWA (offline, IndexedDB) end-to-end test on preview URL at 1366x900. Backend intentionally stopped (/api returns 502) and the app worked fully client-side with ZERO /api network calls recorded during the entire scouting session. Verified: HashRouter home, new-match dialog with venue/date/time/location, navigation to /#/match/<uuid>, 20 players generated with 5/5 In Campo, player inline editing (number/name/surname), player selection via stats footer click, quarter selector Q1..OT, court-shot-svg clicks with made/missed resolving 2pt/3pt (player pts 3 after mixed shots), FT made/missed (stat-ft 2/3), stat +/- counters with floor-at-0 (rd went 0->1->0 confirmed), opponent-points-2/3 adding to scoreboard, undo-btn reverted last opp +2 correctly (opp 5->3), individual +/- balanced to 0 after own-5 vs opp-5 scenario (correct), venue-toggle, scoreboard inline rename, save-roster dialog + roster-row appears on home, Report tab (boxscore/shotmap/filter-Q1/charts), AI analysis instant (607 chars, all 5 Italian sections present: Sintesi, Andamento per quarti, Migliori in campo, Punti critici, Raccomandazioni) and persisted after reload, Dati partita date/time/location persistence, save-status 'Salvato' indicator, full page reload preserves scoreboard 5-3 and AI analysis (IndexedDB court-scout-pro/kv), export-backup-btn triggers browser download of valid JSON (app=court-scout-pro, 1 match + 1 roster, 13.6KB), invalid JSON import shows error toast 'File JSON non leggibile'. All data-testids reliable.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/test_reports/iteration_2.json"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "db.js importAll uses setMany without clearing existing data first: imports are MERGED (same-id entries are overwritten, others preserved). Problem statement says 'restores matches/rosters after deleting them' which works, but a user importing a backup over a populated device will see cumulative data rather than a clean restore. Consider a confirm + wipe-prefix step before setMany, or document the merge behavior.",
+    "BackupBar.doImport does e.target.value = '' before awaiting the file text; this is correct for re-selecting the same file. OK.",
+    "exportAll includes 'exported_at' but importAll ignores version/exported_at; adding a version guard would help future-proof schema changes.",
+    "ScoutPage latestEvent uses >= on timestamps so ties pick the most recently iterated opp event over a player event with equal t; practically fine since Date.now() ticks forward, but a monotonic counter would be more robust.",
+    "No PWA install prompt / manifest validation performed from dev preview (service worker is only in production build per agent note).",
+    "Hero image, fonts, and all assets bundled - verified no external network calls."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (not tested, intentionally stopped)", "frontend": "100% of requested flows"},
+  "test_credentials": "N/A (no auth)",
+  "seed_data_creation": "Created 1 match (TEST_Olimpia MI vs TEST_Virtus) and 1 roster (TEST_Roster1) via UI. Left on device for next iteration verification.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "App is now 100% client-side; HashRouter (routes /#/ and /#/match/:id). IndexedDB database='court-scout-pro', store='kv', keys 'm:<id>' and 'r:<id>'. Preview URL in frontend/.env still points to the old emergent URL but it serves the SPA. Do NOT start the backend. Service worker only registers in production build so offline cannot be verified from dev preview; the main agent reported local prod-build verification. Backup JSON schema: {app:'court-scout-pro', version:1, exported_at, matches:[], rosters:[]}. Known behavior: importAll merges rather than replacing - not a bug per spec but worth noting.",
+  "rca of the issue": "No bugs found."
+}
