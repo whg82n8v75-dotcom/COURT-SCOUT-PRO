@@ -11,6 +11,7 @@ import { Roster } from "@/components/Roster";
 import { ShotPanel } from "@/components/ShotPanel";
 import { StatsPad } from "@/components/StatsPad";
 import { OpponentBar } from "@/components/OpponentBar";
+import { OnCourtBar } from "@/components/OnCourtBar";
 import { Report } from "@/components/Report";
 import { SaveRosterDialog } from "@/components/SaveRosterDialog";
 import { ConfirmButton } from "@/components/ConfirmButton";
@@ -98,6 +99,7 @@ export default function ScoutPage() {
             </div>
             <OpponentBar name={match.opponent_team} onPoints={onOpp} />
           </div>
+          <OnCourtBar match={match} mutate={mutate} activeId={player.id} setActiveId={setActiveId} pmMap={pmMap} />
           <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] xl:grid-cols-[300px_minmax(0,1fr)_340px] gap-4 items-start">
             <Roster match={match} mutate={mutate} activeId={player.id} setActiveId={setActiveId} pmMap={pmMap} />
             <ShotPanel match={match} mutate={mutate} player={player} result={result} setResult={setResult} onShot={onShot} onUndo={onUndo} canUndo={!!ev} />
