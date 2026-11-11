@@ -47,3 +47,13 @@
     .court-wrap, .court-wrap * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .avoid-break { page-break-inside: avoid; }
 }
+
+@media (orientation: landscape) and (min-width: 900px) and (max-width: 1279px) {
+  .scout-live-grid {
+    grid-template-columns: 210px minmax(0, 1fr) 290px !important;
+    gap: 0.5rem !important;
+  }
+  .scout-live-grid > :nth-child(3) {
+    grid-column: auto !important;
+  }
+}
