@@ -4,7 +4,7 @@ import { ArrowLeft, Check, CloudOff, Loader2, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMatch } from "@/hooks/useMatch";
-import { courtIds, emptyStats, is3pt, playerName, plusMinusMap } from "@/lib/stats";
+import { QUARTERS, courtIds, emptyStats, is3pt, playerName, plusMinusMap } from "@/lib/stats";
 import { Scoreboard } from "@/components/Scoreboard";
 import { MatchInfo } from "@/components/MatchInfo";
 import { Roster } from "@/components/Roster";
@@ -89,7 +89,48 @@ useEffect(() => {
     m.opponent_events = []; m.quarter = "Q1";
     m.players.forEach((p, i) => { p.shots = []; p.fts = []; p.stats = emptyStats(); p.inCourt = i < 5; });
   });
+// Avvio cronometro
+const startClock = () => mutate((m) => {
+  const remaining = getClockRemaining(m.clock);
 
+  m.clock = {
+    remainingMs: remaining,
+    running: true,
+    startedAt: Date.now(),
+  };
+});
+
+// Pausa cronometro
+const pauseClock = () => mutate((m) => {
+  m.clock = {
+    remainingMs: getClockRemaining(m.clock),
+    running: false,
+    startedAt: null,
+  };
+});
+
+// Reset cronometro
+const resetClock = () => mutate((m) => {
+  m.clock = {
+    remainingMs: QUARTER_MS,
+    running: false,
+    startedAt: null,
+  };
+});
+
+// Quarto successivo
+const nextQuarter = () => mutate((m) => {
+  const currentIndex = QUARTERS.indexOf(m.quarter);
+  const nextIndex = Math.min(currentIndex + 1, QUARTERS.length - 1);
+
+  m.quarter = QUARTERS[nextIndex];
+
+  m.clock = {
+    remainingMs: QUARTER_MS,
+    running: false,
+    startedAt: null,
+  };
+});
   return (
     <div className="max-w-[1600px] mx-auto px-3 sm:px-5 py-4">
       <header className="no-print flex flex-col gap-3 mb-4">
