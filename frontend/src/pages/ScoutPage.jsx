@@ -86,9 +86,22 @@ useEffect(() => {
     else m.players[e.pi][e.kind].splice(e.i, 1);
   });
   const resetAll = () => mutate((m) => {
-    m.opponent_events = []; m.quarter = "Q1";
-    m.players.forEach((p, i) => { p.shots = []; p.fts = []; p.stats = emptyStats(); p.inCourt = i < 5; });
+  m.opponent_events = [];
+  m.quarter = "Q1";
+
+  m.clock = {
+    remainingMs: QUARTER_MS,
+    running: false,
+    startedAt: null,
+  };
+
+  m.players.forEach((p, i) => {
+    p.shots = [];
+    p.fts = [];
+    p.stats = emptyStats();
+    p.inCourt = i < 5;
   });
+});
 // Avvio cronometro
 const startClock = () => mutate((m) => {
   const remaining = getClockRemaining(m.clock);
