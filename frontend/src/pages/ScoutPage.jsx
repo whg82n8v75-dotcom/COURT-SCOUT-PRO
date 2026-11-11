@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, Check, CloudOff, Loader2, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
@@ -29,6 +29,18 @@ function latestEvent(m) {
   check(m.opponent_events, "opp");
   return best;
 }
+
+const QUARTER_MS = 10 * 60 * 1000;
+
+const getClockRemaining = (clock) => {
+  if (!clock) return QUARTER_MS;
+
+  if (!clock.running) return clock.remainingMs;
+
+  const elapsed = Date.now() - clock.startedAt;
+
+  return Math.max(0, clock.remainingMs - elapsed);
+};
 
 export default function ScoutPage() {
   const { id } = useParams();
