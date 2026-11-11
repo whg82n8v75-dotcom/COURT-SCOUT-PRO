@@ -18,7 +18,20 @@ export async function listMatches() {
 export const getMatch = (id) => get(`m:${id}`, store);
 
 export async function createMatch(body) {
-  const m = { ai_analysis: "", quarter: "Q1", ...body, id: uid(), created_at: now(), updated_at: now() };
+  const m = {
+    ai_analysis: "",
+    quarter: "Q1",
+    clock: {
+      remainingMs: 10 * 60 * 1000,
+      running: false,
+      startedAt: null,
+    },
+    ...body,
+    id: uid(),
+    created_at: now(),
+    updated_at: now(),
+  };
+
   await set(`m:${m.id}`, m, store);
   return m;
 }
