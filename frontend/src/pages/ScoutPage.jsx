@@ -47,6 +47,21 @@ export default function ScoutPage() {
   const { match, mutate, saving } = useMatch(id);
   const [activeId, setActiveId] = useState(1);
   const [result, setResult] = useState("made");
+  const [clockDisplay, setClockDisplay] = useState(QUARTER_MS);
+
+useEffect(() => {
+  if (!match || match === false) return;
+
+  const updateClock = () => {
+    setClockDisplay(getClockRemaining(match.clock));
+  };
+
+  updateClock();
+
+  const interval = setInterval(updateClock, 100);
+
+  return () => clearInterval(interval);
+}, [match]);
   const pmMap = useMemo(() => (match ? plusMinusMap(match) : {}), [match]);
 
   if (match === null) return <div className="p-10 text-slate-400">Caricamento...</div>;
