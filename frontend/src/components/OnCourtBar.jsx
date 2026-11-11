@@ -47,7 +47,18 @@ const Chip = ({ p, active, pm, bench, onSelect, onSwap }) => (
   </div>
 );
 
-export const OnCourtBar = ({ match, mutate, activeId, setActiveId, pmMap }) => {
+export const OnCourtBar = ({
+  match,
+  mutate,
+  activeId,
+  setActiveId,
+  pmMap,
+  clockDisplay,
+  startClock,
+  pauseClock,
+  resetClock,
+  nextQuarter,
+  }) => {
   const onCourt = match.players.filter((p) => p.inCourt);
   const bench = match.players.filter((p) => !p.inCourt);
   const swap = (outId, inId) => mutate((m) => m.players.forEach((p) => {
@@ -56,6 +67,41 @@ export const OnCourtBar = ({ match, mutate, activeId, setActiveId, pmMap }) => {
   }));
   return (
     <section data-testid="oncourt-bar" className="sticky top-0 z-20 -mx-3 sm:-mx-5 px-3 sm:px-5 py-2 mb-3 bg-[#0B1120]/90 backdrop-blur-md border-b border-white/10">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4 p-3 rounded-xl bg-slate-900 border border-white/10">
+  <div>
+    <div className="text-xs uppercase tracking-widest text-slate-400">
+      {match.quarter}
+    </div>
+    <div className="text-4xl font-mono font-bold text-white tabular-nums">
+      {Math.floor(clockDisplay / 60000)}:
+      {String(Math.floor((clockDisplay % 60000) / 1000)).padStart(2, "0")}
+    </div>
+  </div>
+
+  <div className="flex flex-wrap gap-2">
+    <button
+      onClick={match.clock?.running ? pauseClock : startClock}
+      className="px-4 py-2 rounded-lg bg-emerald-500 text-white font-bold"
+    >
+      {match.clock?.running ? "PAUSA" : "START"}
+    </button>
+
+    <button
+      onClick={resetClock}
+      className="px-4 py-2 rounded-lg bg-slate-700 text-white font-bold"
+    >
+      RESET
+    </button>
+
+    <button
+      onClick={nextQuarter}
+      className="px-4 py-2 rounded-lg bg-blue-600 text-white font-bold"
+      disabled={match.quarter === "OT"}
+    >
+      QUARTO SUCCESSIVO
+    </button>
+  </div>
+</div>
       <div className="flex items-center gap-2 mb-1.5">
         <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-emerald-400">Quintetto in campo</span>
         <span data-testid="oncourt-count" className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${onCourt.length === 5 ? "bg-emerald-500/20 text-emerald-300" : "bg-red-500/20 text-red-300"}`}>{onCourt.length}/5</span>
