@@ -167,7 +167,18 @@ const nextQuarter = () => mutate((m) => {
             </div>
             <OpponentBar name={match.opponent_team} onPoints={onOpp} />
           </div>
-          <OnCourtBar match={match} mutate={mutate} activeId={player.id} setActiveId={setActiveId} pmMap={pmMap} />
+          <OnCourtBar
+            match={match}
+            mutate={mutate}
+            activeId={player.id}
+            setActiveId={setActiveId}
+            pmMap={pmMap}
+            clockDisplay={clockDisplay}
+            startClock={startClock}
+            pauseClock={pauseClock}
+            resetClock={resetClock}
+            nextQuarter={nextQuarter}
+          />
           <div className="scout-live-grid grid grid-cols-1 md:grid-cols-[280px_1fr] xl:grid-cols-[300px_minmax(0,1fr)_340px] gap-4 items-start">
             <Roster match={match} mutate={mutate} activeId={player.id} setActiveId={setActiveId} pmMap={pmMap} />
             <ShotPanel match={match} mutate={mutate} player={player} result={result} setResult={setResult} onShot={onShot} onUndo={onUndo} canUndo={!!ev} />
