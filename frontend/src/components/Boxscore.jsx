@@ -21,7 +21,9 @@ const cells = (l) => [
 ];
 
 
-export const Boxscore = ({ match, pmMap }) => {
+export const Boxscore = ({ match, pmMap, clockDisplay }) => {
+  void clockDisplay;
+  
   const lines = match.players.map((p) => {
     const l = playerLine(p, pmMap);
 
