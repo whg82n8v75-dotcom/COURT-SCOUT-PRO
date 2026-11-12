@@ -80,3 +80,15 @@ export const ftText = (m, a) => `${m}/${a} (${pct1(m, a)})`;
 export const fmtPm = (v) => `${v > 0 ? "+" : ""}${v}`;
 export const pmClass = (v) => (v > 0 ? "text-emerald-400" : v < 0 ? "text-red-400" : "text-slate-400");
 export const playerName = (p) => `#${p.number} ${p.name} ${p.surname}`.trim();
+export const formatMinutes = (seconds) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+
+  return `${minutes}:${String(remainingSeconds).padStart(2, "0")}`;
+};
+
+export const plusMinusPer10 = (pm, seconds) => {
+  if (!seconds || seconds <= 0) return 0;
+
+  return (pm / seconds) * 600;
+};
