@@ -4,9 +4,17 @@ import { Court, QuarterLegend } from "@/components/Court";
 import { QUARTERS, Q_COLORS, playerPoints, quarterPoints } from "@/lib/stats";
 
 const Card = ({ title, children, testId }) => (
-  <div data-testid={testId} className="avoid-break bg-slate-900/60 border border-white/10 rounded-xl p-4">
-    <h4 className="text-lg font-bold uppercase mb-3">{title}</h4>
-    {children}
+  <div
+    data-testid={testId}
+    className="avoid-break min-w-0 w-full overflow-hidden bg-slate-900/60 border border-white/10 rounded-xl p-4"
+  >
+    <h4 className="text-lg font-bold uppercase mb-3">
+      {title}
+    </h4>
+
+    <div className="min-w-0 w-full">
+      {children}
+    </div>
   </div>
 );
 
@@ -36,14 +44,43 @@ export const PointsChart = ({ match }) => {
   return (
     <Card title="Distribuzione punti" testId="points-chart">
       {data.length === 0 ? <p className="text-slate-500 text-sm py-10 text-center">Nessun punto registrato</p> : (
-        <ResponsiveContainer width="100%" height={Math.max(160, data.length * 32)}>
-          <BarChart data={data} layout="vertical" margin={{ left: 10, right: 20 }}>
-            <XAxis type="number" stroke="#64748b" allowDecimals={false} />
-            <YAxis type="category" dataKey="name" stroke="#94a3b8" width={110} tick={{ fontSize: 12 }} />
-            <Tooltip {...tip} cursor={{ fill: "rgba(255,255,255,0.05)" }} />
-            <Bar dataKey="pts" name="Punti" fill="#38BDF8" radius={[0, 4, 4, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
+      <div className="w-full min-w-0 overflow-hidden">
+        <ResponsiveContainer
+          width="100%"
+          height={Math.max(160, data.length * 32)}
+          minWidth={0}
+          debounce={50}
+        >
+          <BarChart
+            data={data}
+            layout="vertical"
+            margin={{ top: 5, right: 10, bottom: 5, left: 0 }}
+          >
+              <XAxis
+                type="number"
+                stroke="#64748b"
+                allowDecimals={false}
+              />
+              <YAxis
+                type="category"
+                dataKey="name"
+                stroke="#94a3b8"
+                width={90}
+                tick={{ fontSize: 10 }}
+              />
+              <Tooltip
+                {...tip}
+                cursor={{ fill: "rgba(255,255,255,0.05)" }}
+              />
+              <Bar
+                dataKey="pts"
+                name="Punti"
+                fill="#38BDF8"
+                radius={[0, 4, 4, 0]}
+              />
+        </BarChart>
+      </ResponsiveContainer>
+     </div>
       )}
     </Card>
   );
