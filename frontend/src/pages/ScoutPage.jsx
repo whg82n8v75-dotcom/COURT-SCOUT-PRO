@@ -265,7 +265,7 @@ const nextQuarter = () => mutate((m) => {
         </TabsContent>
 
         <TabsContent value="report" className="mt-0">
-          <Report match={match} mutate={mutate} pmMap={pmMap} />
+          <Report match={match} mutate={mutate} pmMap={pmMap} clockDisplay={clockDisplay} />
         </TabsContent>
 
         <TabsContent value="info" className="mt-0">
