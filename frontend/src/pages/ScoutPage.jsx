@@ -105,12 +105,22 @@ useEffect(() => {
 // Avvio cronometro
 const startClock = () => mutate((m) => {
   const remaining = getClockRemaining(m.clock);
+  if (remaining <= 0 || m.clock?.running) return;
+
+  const now = Date.now();
 
   m.clock = {
     remainingMs: remaining,
     running: true,
-    startedAt: Date.now(),
+    startedAt: now,
   };
+
+  m.players.forEach((p) => {
+    if (p.inCourt) {
+      p.minutesMs = p.minutesMs || 0;
+      p.minuteStartedAt = now;
+    }
+  });
 });
 
 // Pausa cronometro
