@@ -12,7 +12,7 @@ const HEAD = [
   "#", "Giocatore", "MIN", "PTS", "2PT", "3PT",
   "FG", "FG%", "TL", "RO", "RD", "RT",
   "AST", "STL", "TO", "BLK", "PF", "DF",
-  "+/-", "+/- x10"
+  "+/-"
 ];
 const cells = (l) => [
   <b key="p">{l.pts}</b>, `${l.m2}/${l.a2}`, `${l.m3}/${l.a3}`, `${l.fgM}/${l.fgA}`,
