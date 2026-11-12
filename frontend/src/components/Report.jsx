@@ -21,7 +21,7 @@ export const Report = ({ match, mutate, pmMap, clockDisplay }) => (
     </div>
     <section>
       <h3 className="text-xl font-bold uppercase mb-3">1. Boxscore</h3>
-      <Boxscore match={match} pmMap={pmMap} />
+      <Boxscore match={match} pmMap={pmMap} clockDisplay={clockDisplay} />
     </section>
     <section>
       <h3 className="text-xl font-bold uppercase mb-3">2. Mappe tiri & distribuzione</h3>
