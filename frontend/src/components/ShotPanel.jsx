@@ -24,7 +24,7 @@ export const ShotPanel = ({ match, mutate, player, result, setResult, onShot, on
         </button>
       ))}
     </div>
-    <div className="w-full max-w-[400px] mx-auto">
+    <div className="w-full max-w-[400px] mx-auto h-[350px] overflow-hidden flex items-center justify-center">
       <Court shots={player.shots} onShot={onShot} testId="court-shot-svg" />
     </div>
     <QuarterLegend />
