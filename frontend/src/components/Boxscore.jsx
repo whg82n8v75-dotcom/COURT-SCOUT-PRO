@@ -24,7 +24,22 @@ const cells = (l) => [
 export const Boxscore = ({ match, pmMap }) => {
   const lines = match.players.map((p) => {
     const l = playerLine(p, pmMap);
-    const seconds = p.playedMs || 0;
+
+const now = Date.now();
+
+const accumulatedMs = p.minutesMs || 0;
+
+const liveMs =
+  match.clock?.running &&
+  p.inCourt &&
+  p.minuteStartedAt != null
+    ? Math.min(
+        Math.max(0, now - p.minuteStartedAt),
+        Math.max(0, match.clock.remainingMs)
+      )
+    : 0;
+
+const seconds = (accumulatedMs + liveMs) / 1000;
 
     return {
       p,
