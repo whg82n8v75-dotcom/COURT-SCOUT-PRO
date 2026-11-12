@@ -82,9 +82,10 @@ const seconds = (accumulatedMs + liveMs) / 1000;
               ].map((c, j) => (
                 <td key={j} className="px-2 py-2">{c}</td>
               ))}
-              <td className={`px-2 py-2 font-bold ${pmClass(l.pm)}`}>{fmtPm(l.pm)}</td>
               <td className={`px-2 py-2 font-bold ${pmClass(pm10)}`}>
-                {min === "0:00" ? "-" : `${pm10 > 0 ? "+" : ""}${pm10.toFixed(1).replace(".", ",")}`}
+                {min === "0:00"
+                  ? "-"
+                  : `${pm10 > 0 ? "+" : ""}${pm10.toFixed(1).replace(".", ",")}`}
               </td>
             </tr>
           ))}
@@ -99,8 +100,7 @@ const seconds = (accumulatedMs + liveMs) / 1000;
             ].map((c, j) => (
               <td key={j} className="px-2 py-2.5">{c}</td>
             ))}
-            <td className="px-2 py-2.5">-</td>
-            <td className="px-2 py-2.5">-</td>
+           <td className="px-2 py-2.5">-</td>
           </tr>
         </tbody>
       </table>
