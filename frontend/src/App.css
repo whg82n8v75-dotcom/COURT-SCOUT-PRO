@@ -46,6 +46,33 @@
     .print-light th { background: #0f172a !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .court-wrap, .court-wrap * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .avoid-break { page-break-inside: avoid; }
+    /* Layout dei grafici durante la stampa PDF */
+    .print-light .grid {
+      min-width: 0 !important;
+    }
+    
+    .print-light [data-testid="team-shot-map"],
+    .print-light [data-testid="points-chart"],
+    .print-light [data-testid="quarter-chart"] {
+      min-width: 0 !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+    }
+    
+    /* Mantiene i grafici Recharts nel proprio riquadro */
+    .print-light .recharts-responsive-container {
+      max-width: 100% !important;
+      min-width: 0 !important;
+    }
+    
+    .print-light .recharts-wrapper {
+      max-width: 100% !important;
+    }
+    
+    .print-light .recharts-surface {
+      max-width: 100% !important;
+    }
 }
 
 @media (orientation: landscape) and (min-width: 900px) and (max-width: 1279px) {
