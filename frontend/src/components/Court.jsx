@@ -23,8 +23,8 @@ export const Court = ({ shots, onShot, testId }) => {
   };
   return (
     <div className="court-wrap">
-      <svg ref={ref} viewBox="0 0 500 470" preserveAspectRatio="none" onClick={click} data-testid={testId}
-          className={`block w-full h-[350px] ${onShot ? "cursor-crosshair" : ""}`}>
+      <svg ref={ref} viewBox="0 0 500 470" preserveAspectRatio="xMidYMid meet" onClick={click} data-testid={testId}
+        className={`block w-full h-auto ${onShot ? "cursor-crosshair" : ""}`}>
         <g fill="none" stroke="#FEF3C7" strokeWidth="3">
           <rect x="0" y="0" width="500" height="470" strokeWidth="5" />
           <rect x="170" y="0" width="160" height="190" fill="#92400E" fillOpacity="0.45" />
