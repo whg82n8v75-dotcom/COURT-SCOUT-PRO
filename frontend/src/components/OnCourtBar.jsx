@@ -61,10 +61,30 @@ export const OnCourtBar = ({
   }) => {
   const onCourt = match.players.filter((p) => p.inCourt);
   const bench = match.players.filter((p) => !p.inCourt);
-  const swap = (outId, inId) => mutate((m) => m.players.forEach((p) => {
-    if (p.id === outId) p.inCourt = false;
-    if (p.id === inId) p.inCourt = true;
-  }));
+  const swap = (outId, inId) => mutate((m) => {
+  const now = Date.now();
+  const clockRunning = m.clock?.running && clockDisplay > 0;
+
+  m.players.forEach((p) => {
+    if (p.id === outId) {
+      if (clockRunning && p.minuteStartedAt != null) {
+        p.minutesMs = (p.minutesMs || 0) + Math.max(
+          0,
+          now - p.minuteStartedAt
+        );
+      }
+
+      p.minuteStartedAt = null;
+      p.inCourt = false;
+    }
+
+    if (p.id === inId) {
+      p.inCourt = true;
+      p.minutesMs = p.minutesMs || 0;
+      p.minuteStartedAt = clockRunning ? now : null;
+    }
+  });
+});
   return (
     <section data-testid="oncourt-bar" className="sticky top-0 z-20 -mx-3 sm:-mx-5 px-3 sm:px-5 py-2 mb-3 bg-[#0B1120]/90 backdrop-blur-md border-b border-white/10">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4 p-3 rounded-xl bg-slate-900 border border-white/10">
