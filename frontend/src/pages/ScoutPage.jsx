@@ -53,7 +53,42 @@ useEffect(() => {
   if (!match || match === false) return;
 
   const updateClock = () => {
-    setClockDisplay(getClockRemaining(match.clock));
+    const remaining = getClockRemaining(match.clock);
+
+    setClockDisplay(remaining);
+
+    if (remaining <= 0 && match.clock?.running) {
+      mutate((m) => {
+        if (!m.clock?.running) return;
+
+        const now = Date.now();
+
+        m.players.forEach((p) => {
+          if (p.minuteStartedAt != null) {
+            const elapsed = Math.max(
+              0,
+              now - p.minuteStartedAt
+            );
+
+            const available = Math.max(
+              0,
+              m.clock.remainingMs
+            );
+
+            p.minutesMs = (p.minutesMs || 0) +
+              Math.min(elapsed, available);
+          }
+
+          p.minuteStartedAt = null;
+        });
+
+        m.clock = {
+          remainingMs: 0,
+          running: false,
+          startedAt: null,
+        };
+      });
+    }
   };
 
   updateClock();
@@ -61,7 +96,7 @@ useEffect(() => {
   const interval = setInterval(updateClock, 100);
 
   return () => clearInterval(interval);
-}, [match]);
+}, [match, mutate]);
   const pmMap = useMemo(() => (match ? plusMinusMap(match) : {}), [match]);
 
   if (match === null) return <div className="p-10 text-slate-400">Caricamento...</div>;
@@ -85,23 +120,36 @@ useEffect(() => {
     if (e.kind === "opp") m.opponent_events.splice(e.i, 1);
     else m.players[e.pi][e.kind].splice(e.i, 1);
   });
-  const resetAll = () => mutate((m) => {
+  
+ const resetAll = () => mutate((m) => {
+  // Azzera i punti degli avversari
   m.opponent_events = [];
+
+  // Torna al primo quarto
   m.quarter = "Q1";
 
+  // Reimposta il cronometro
   m.clock = {
     remainingMs: QUARTER_MS,
     running: false,
     startedAt: null,
   };
 
+  // Azzera statistiche e minutaggio dei giocatori
   m.players.forEach((p, i) => {
     p.shots = [];
     p.fts = [];
     p.stats = emptyStats();
+
+    // Azzera il minutaggio automatico
+    p.minutesMs = 0;
+    p.minuteStartedAt = null;
+
+    // Ripristina il quintetto iniziale
     p.inCourt = i < 5;
   });
 });
+  
 // Avvio cronometro
 const startClock = () => mutate((m) => {
   const remaining = getClockRemaining(m.clock);
