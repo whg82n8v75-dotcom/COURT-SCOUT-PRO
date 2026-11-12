@@ -156,20 +156,51 @@ const pauseClock = () => mutate((m) => {
 
 // Reset cronometro
 const resetClock = () => mutate((m) => {
+  const now = Date.now();
+  const remaining = getClockRemaining(m.clock);
+
+  m.players.forEach((p) => {
+    if (p.minuteStartedAt != null) {
+      const elapsed = Math.max(0, now - p.minuteStartedAt);
+      const available = Math.max(0, m.clock?.remainingMs ?? 0);
+
+      p.minutesMs = (p.minutesMs || 0) +
+        Math.min(elapsed, available);
+
+      p.minuteStartedAt = null;
+    }
+  });
+
   m.clock = {
     remainingMs: QUARTER_MS,
     running: false,
     startedAt: null,
   };
 });
-
 // Quarto successivo
 const nextQuarter = () => mutate((m) => {
+  const now = Date.now();
+
+  // Salva i minuti accumulati prima del cambio quarto
+  m.players.forEach((p) => {
+    if (p.minuteStartedAt != null) {
+      const elapsed = Math.max(0, now - p.minuteStartedAt);
+      const available = Math.max(0, m.clock?.remainingMs ?? 0);
+
+      p.minutesMs = (p.minutesMs || 0) +
+        Math.min(elapsed, available);
+    }
+
+    p.minuteStartedAt = null;
+  });
+
+  // Passa al quarto successivo
   const currentIndex = QUARTERS.indexOf(m.quarter);
   const nextIndex = Math.min(currentIndex + 1, QUARTERS.length - 1);
 
   m.quarter = QUARTERS[nextIndex];
 
+  // Ferma e reimposta il cronometro
   m.clock = {
     remainingMs: QUARTER_MS,
     running: false,
