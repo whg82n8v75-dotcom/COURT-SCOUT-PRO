@@ -24,9 +24,9 @@ export const ShotPanel = ({ match, mutate, player, result, setResult, onShot, on
         </button>
       ))}
     </div>
-    <div className="w-full h-[350px] overflow-hidden">
+   <div className="w-full">
       <Court shots={player.shots} onShot={onShot} testId="court-shot-svg" />
-    </div>
+   </div>
     <QuarterLegend />
     <button data-testid="undo-btn" onClick={onUndo} disabled={!canUndo}
       className="tap h-11 rounded-lg bg-slate-800 border border-white/10 text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-40">
