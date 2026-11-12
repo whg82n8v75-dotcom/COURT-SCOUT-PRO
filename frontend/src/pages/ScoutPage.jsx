@@ -125,8 +125,30 @@ const startClock = () => mutate((m) => {
 
 // Pausa cronometro
 const pauseClock = () => mutate((m) => {
+  const now = Date.now();
+  const remaining = getClockRemaining(m.clock);
+
+  m.players.forEach((p) => {
+    if (p.inCourt && p.minuteStartedAt != null) {
+      const elapsed = Math.max(
+        0,
+        now - p.minuteStartedAt
+      );
+
+      const available = Math.max(
+        0,
+        m.clock.remainingMs
+      );
+
+      p.minutesMs = (p.minutesMs || 0) +
+        Math.min(elapsed, available);
+    }
+
+    p.minuteStartedAt = null;
+  });
+
   m.clock = {
-    remainingMs: getClockRemaining(m.clock),
+    remainingMs: remaining,
     running: false,
     startedAt: null,
   };
